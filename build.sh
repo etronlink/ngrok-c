@@ -1,15 +1,10 @@
 #!/bin/sh
 DIR=build
-mkdir $DIR
+mkdir -p $DIR
 
-rm -rf $DIR/main.o
-rm -rf $DIR/cJSON.o
-rm -rf $DIR/sendmsg.o
-rm -rf $DIR/nonblocking.o
-rm -rf $DIR/ngrokc
-rm -rf $DIR/sslbio.o
+rm -rf $DIR/*
 CC=g++
-YH="-g  -rdynamic"
+YH="-g -rdynamic -DOPENSSL=1 -DOPENSSLDL=0"
 $CC  $YH  -c sendmsg.cpp -o $DIR/sendmsg.o
 $CC  $YH -c cJSON.c -o $DIR/cJSON.o
 $CC  $YH -c main.cpp -o $DIR/main.o
