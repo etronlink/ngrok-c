@@ -509,7 +509,7 @@ int CmdSock(int *mainsock,sockinfo *tempinfo,map<int,sockinfo*>*socklist,struct 
 
 int ConnectMain(int *mainsock,struct sockaddr_in server_addr,ssl_info **mainsslinfo, \
     string *ClientId,map<int,sockinfo*>*socklist, char *authtoken, \
-    string *Account, string *DevID, string *DevType, string *ProxyType)
+    string *Account, string *DevID, string *DevType, string *ProxyType, string *Osversion, string *Master)
 {
 	*mainsock = socket( AF_INET, SOCK_STREAM, IPPROTO_IP );
     SetBufSize(*mainsock);
@@ -543,9 +543,9 @@ int ConnectMain(int *mainsock,struct sockaddr_in server_addr,ssl_info **mainssli
 	}
 
     #if OPENSSL
-	SendAuth(*mainsock,(*mainsslinfo)->ssl, *ClientId, authtoken, *Account, *DevID, *DevType, *ProxyType);
+	SendAuth(*mainsock,(*mainsslinfo)->ssl, *ClientId, authtoken, *Account, *DevID, *DevType, *ProxyType, *Osversion, *Master);
     #else
-	SendAuth(*mainsock, &(*mainsslinfo)->ssl, *ClientId, authtoken, *Account, *DevID, *DevType, *ProxyType);
+	SendAuth(*mainsock, &(*mainsslinfo)->ssl, *ClientId, authtoken, *Account, *DevID, *DevType, *ProxyType, *Osversion, *Master);
     #endif
 
     setnonblocking( *mainsock,1);

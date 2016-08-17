@@ -39,7 +39,7 @@ int SendReqTunnel(int sock,ssl_context *ssl,char *ReqId,const char *protocol,con
 
 
 int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,int * s_port,char * authtoken,string *ClientId, \
-	string *Account, string *DevID, string *DevType, string *ProxyType)
+	string *Account, string *DevID, string *DevType, string *ProxyType, string *Osversion, string *Master)
 {
 	if ( argc > 1 )
 	{
@@ -119,6 +119,14 @@ int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,i
                         {
                             *ProxyType = string( temp );
 						}
+						if(getvalue(jsonstr,"Osversion",temp) == 0)
+                        {
+                            *Osversion = string( temp );
+						}
+						if(getvalue(jsonstr,"Master",temp) == 0)
+                        {
+                            *Master = string( temp );
+						}
 
 						pos = pos + xpos + 1;
 					}
@@ -167,12 +175,12 @@ int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,i
 				}
 			}
 		}
-		echo("Account:%s, DevID:%s, DevType:%s, ProxyType:%s\n", Account->c_str(), \
-			DevID->c_str(), DevType->c_str(), ProxyType->c_str());
+		echo("Account:%s, DevID:%s, DevType:%s, ProxyType:%s, Osversion:%s, Master\n", Account->c_str(), \
+			DevID->c_str(), DevType->c_str(), ProxyType->c_str(), Osversion->c_str(), Account->c_str());
 	}else  {
 		echo( "use " );
         echo("%s",argv[0]);
-		echo( " -Info[Account:a,DevID:b,DevType:c,ProxyType:d] -SER[Shost:ngrokd.ngrok.com,Sport:443,Atoken:xxxxxxx] -AddTun[Type:tcp,Lhost:127.0.0.1,Lport:80,Rport:50199]" );
+		echo( " -Info[Account:a,DevID:b,DevType:c,ProxyType:d,Osversion:1.1,Master:1] -SER[Shost:ngrokd.ngrok.com,Sport:443,Atoken:xxxxxxx] -AddTun[Type:tcp,Lhost:127.0.0.1,Lport:80,Rport:50199]" );
 		echo( "\r\n" );
 		exit( 1 );
 	}

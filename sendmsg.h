@@ -60,7 +60,7 @@ inline int get_curr_unixtime()
 }
 
 int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,int * s_port,char * authtoken,string *ClientId, \
-    string *Account, string *UgwId, string *DevType, string *ProxyType);
+    string *Account, string *UgwId, string *DevType, string *ProxyType, string *Osversion, string *Master);
 
 inline int strpos( char *str, char c )
 {
@@ -172,7 +172,7 @@ inline int sendpack(int sock,ssl_context *ssl,const char *msgstr,int isblock)
 }
 
 inline int SendAuth(int sock,ssl_context *ssl,string ClientId,string user, string Account, string DevID, \
-    string DevType, string ProxyType)
+    string DevType, string ProxyType, string Osversion, string Master)
 {
    // string str="{\"Type\":\"Auth\",\"Payload\":{\"Version\":\"2\",\"MmVersion\":\"1.7\",\"User\":\""+user+"\",\"Password\": \"\",\"OS\":\"darwin\",\"Arch\":\"amd64\",\"ClientId\":\""+ClientId+"\"}}";
     char str[512];
@@ -180,8 +180,10 @@ inline int SendAuth(int sock,ssl_context *ssl,string ClientId,string user, strin
     sprintf(str,"{\"Type\":\"Auth\",\"Payload\":{\"Version\":\"2\"," \
         "\"MmVersion\":\"1.7\",\"User\":\"%s\",\"Password\": \"\"," \
         "\"OS\":\"darwin\",\"Arch\":\"amd64\",\"ClientId\":\"%s\"," \
-        "\"Account\":\"%s\", \"DevID\":\"%s\", \"DevType\":\"%s\" , \"ProxyType\":\"%s\"}}", \
-        user.c_str(), ClientId.c_str(), Account.c_str(), DevID.c_str(), DevType.c_str(), ProxyType.c_str());
+        "\"Account\":\"%s\", \"DevID\":\"%s\", \"DevType\":\"%s\" , \"ProxyType\":\"%s\"," \
+        "\"Osversion\":\"%s\", \"Master\":\"%s\"}}", \
+        user.c_str(), ClientId.c_str(), Account.c_str(), DevID.c_str(), DevType.c_str(), \
+        ProxyType.c_str(), Osversion.c_str(), Master.c_str());
 
     echo("Auth is %s\n", str);
     return sendpack(sock, ssl, str, 1);

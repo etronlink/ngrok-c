@@ -77,6 +77,8 @@ string Account = "";
 string DevID = "";
 string DevType = "";
 string ProxyType ="";
+string Osversion = "";
+string Master = "";
 //end add 
 int	pingtime	= 0;
 int	ping		= 25; //不能大于30
@@ -120,7 +122,7 @@ int CheckStatus()
         if(lasterrtime==0||(lasterrtime+60)<get_curr_unixtime()){
             //连接失败
             if(ConnectMain(&mainsock,server_addr,&mainsslinfo,&ClientId,&socklist,authtoken, &Account, \
-                &DevID, &DevType, &ProxyType)==-1)
+                &DevID, &DevType, &ProxyType, &Osversion, &Master)==-1)
             {
                 mainsockstatus=0;
                 printf("link err\r\n");
@@ -154,7 +156,7 @@ int main( int argc, char **argv )
 {
     printf("ngrokc v%s \r\n",VER);
 	loadargs( argc, argv, &tunnellist, s_name, &s_port, authtoken,&ClientId, &Account, &DevID, \
-        &DevType, &ProxyType);
+        &DevType, &ProxyType, &Osversion, &Master);
     #if WIN32
 	signal( SIGINT, cs );
     #else
