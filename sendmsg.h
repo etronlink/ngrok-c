@@ -59,7 +59,8 @@ inline int get_curr_unixtime()
     return time(&now);
 }
 
-int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,int * s_port,char * authtoken,string *ClientId);
+int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,int * s_port,char * authtoken,string *ClientId, \
+    string *Account, string *UgwId, string *DevType, string *ProxyType);
 
 inline int strpos( char *str, char c )
 {
@@ -170,14 +171,20 @@ inline int sendpack(int sock,ssl_context *ssl,const char *msgstr,int isblock)
     return  len;
 }
 
-inline int SendAuth(int sock,ssl_context *ssl,string ClientId,string user)
+inline int SendAuth(int sock,ssl_context *ssl,string ClientId,string user, string Account, string DevID, \
+    string DevType, string ProxyType)
 {
    // string str="{\"Type\":\"Auth\",\"Payload\":{\"Version\":\"2\",\"MmVersion\":\"1.7\",\"User\":\""+user+"\",\"Password\": \"\",\"OS\":\"darwin\",\"Arch\":\"amd64\",\"ClientId\":\""+ClientId+"\"}}";
-    char str[255];
-    memset(str,0,255);
-    sprintf(str,"{\"Type\":\"Auth\",\"Payload\":{\"Version\":\"2\",\"MmVersion\":\"1.7\",\"User\":\"%s\",\"Password\": \"\",\"OS\":\"darwin\",\"Arch\":\"amd64\",\"ClientId\":\"%s\"}}",user.c_str(),ClientId.c_str());
+    char str[512];
+    memset(str, 0, 512);
+    sprintf(str,"{\"Type\":\"Auth\",\"Payload\":{\"Version\":\"2\"," \
+        "\"MmVersion\":\"1.7\",\"User\":\"%s\",\"Password\": \"\"," \
+        "\"OS\":\"darwin\",\"Arch\":\"amd64\",\"ClientId\":\"%s\"," \
+        "\"Account\":\"%s\", \"DevID\":\"%s\", \"DevType\":\"%s\" , \"ProxyType\":\"%s\"}}", \
+        user.c_str(), ClientId.c_str(), Account.c_str(), DevID.c_str(), DevType.c_str(), ProxyType.c_str());
 
-    return sendpack(sock,ssl,str,1);
+    echo("Auth is %s\n", str);
+    return sendpack(sock, ssl, str, 1);
 }
 
 

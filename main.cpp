@@ -72,6 +72,12 @@ char s_name[255]="ngrokd.ngrok.com";
 int	s_port= 443;
 char authtoken[255]="";
 string ClientId = "";
+//add for more info
+string Account = "";
+string DevID = "";
+string DevType = "";
+string ProxyType ="";
+//end add 
 int	pingtime	= 0;
 int	ping		= 25; //不能大于30
 int	mainsock=0;
@@ -113,7 +119,8 @@ int CheckStatus()
     {
         if(lasterrtime==0||(lasterrtime+60)<get_curr_unixtime()){
             //连接失败
-            if(ConnectMain(&mainsock,server_addr,&mainsslinfo,&ClientId,&socklist,authtoken)==-1)
+            if(ConnectMain(&mainsock,server_addr,&mainsslinfo,&ClientId,&socklist,authtoken, &Account, \
+                &DevID, &DevType, &ProxyType)==-1)
             {
                 mainsockstatus=0;
                 printf("link err\r\n");
@@ -146,7 +153,8 @@ int checkping(){
 int main( int argc, char **argv )
 {
     printf("ngrokc v%s \r\n",VER);
-	loadargs( argc, argv, &tunnellist, s_name, &s_port, authtoken,&ClientId );
+	loadargs( argc, argv, &tunnellist, s_name, &s_port, authtoken,&ClientId, &Account, &DevID, \
+        &DevType, &ProxyType);
     #if WIN32
 	signal( SIGINT, cs );
     #else
@@ -460,7 +468,7 @@ void* proxy(  )
 			}
 		}
 		//睡1豪秒，避免CPU过高
-		sleeps(2);
+		sleeps(10);
 	}
 	return(0);
 }

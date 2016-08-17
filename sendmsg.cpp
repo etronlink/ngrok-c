@@ -38,7 +38,8 @@ int SendReqTunnel(int sock,ssl_context *ssl,char *ReqId,const char *protocol,con
 
 
 
-int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,int * s_port,char * authtoken,string *ClientId)
+int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,int * s_port,char * authtoken,string *ClientId, \
+	string *Account, string *DevID, string *DevType, string *ProxyType)
 {
 	if ( argc > 1 )
 	{
@@ -89,6 +90,40 @@ int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,i
 					}
 				}
 
+				if ( strncmp (argvstr, "-Info", 5) == 0 ){
+					run = 1;
+					while (run) {
+						memset( jsonstr, 0, 1024 );
+						xpos = strpos( argvstr + pos + 1, ',' );
+						if ( xpos == -1 )
+						{
+							xpos = strpos( argvstr + pos + 1, ']' );
+							memcpy( jsonstr, argvstr + pos + 1, xpos );
+							run = 0;
+						}else  {
+							memcpy( jsonstr, argvstr + pos + 1, xpos );
+						}
+						if(getvalue(jsonstr,"Account",temp) == 0)
+                        {
+                            *Account = string( temp );
+						}
+						if(getvalue(jsonstr,"DevID",temp) == 0)
+                        {
+                            *DevID = string( temp );
+						}
+						if(getvalue(jsonstr,"DevType",temp) == 0)
+                        {
+                            *DevType = string( temp );
+						}
+						if(getvalue(jsonstr,"ProxyType",temp) == 0)
+                        {
+                            *ProxyType = string( temp );
+						}
+
+						pos = pos + xpos + 1;
+					}
+				}
+
 				if ( strncmp( argvstr, "-AddTun", 7 ) == 0 )
 				{
 					run = 1;
@@ -132,10 +167,12 @@ int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,i
 				}
 			}
 		}
+		echo("Account:%s, DevID:%s, DevType:%s, ProxyType:%s\n", Account->c_str(), \
+			DevID->c_str(), DevType->c_str(), ProxyType->c_str());
 	}else  {
 		echo( "use " );
         echo("%s",argv[0]);
-		echo( " -SER[Shost:ngrokd.ngrok.com,Sport:443,Atoken:xxxxxxx] -AddTun[Type:tcp,Lhost:127.0.0.1,Lport:80,Rport:50199]" );
+		echo( " -Info[Account:a,DevID:b,DevType:c,ProxyType:d] -SER[Shost:ngrokd.ngrok.com,Sport:443,Atoken:xxxxxxx] -AddTun[Type:tcp,Lhost:127.0.0.1,Lport:80,Rport:50199]" );
 		echo( "\r\n" );
 		exit( 1 );
 	}

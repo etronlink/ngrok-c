@@ -15,7 +15,7 @@ typedef long long __int64;
 #include<stdlib.h>
 using namespace std;
 
-/*¿ØÖÆudp*/
+/*Â¿Ã˜Ã–Ã†udp*/
 int ControlUdp(int port){
     int sockfd;
     struct sockaddr_in my_addr;
@@ -50,13 +50,13 @@ int UdpCmd(int udpsocket){
     if(udpbuflen>0){
          cJSON *json = cJSON_Parse( buf );
          cJSON *cmd = cJSON_GetObjectItem( json, "cmd" );
-         //ÍË³ö
+         //ÃÃ‹Â³Ã¶
          if ( strcmp( cmd->valuestring, "exit" ) == 0 ){
             cJSON_Delete( json );
             exit(0);
          }
          if ( strcmp( cmd->valuestring, "ping" ) == 0 ){
-            //»Ø¸´
+            //Â»Ã˜Â¸Â´
             char sendbuf[255]="{\"cmd\":\"pong\"}";
             sendto(udpsocket,sendbuf,strlen(sendbuf),0,(struct sockaddr *)&udpaddr,sizeof(udpaddr));
             cJSON_Delete( json );
@@ -97,7 +97,7 @@ int InitTunnelList(list<TunnelInfo*>*tunnellist,map<string,TunnelReq*>*tunneladd
         tunnelinfo->regstate=0;
     }
 
-    //ÊÍ·ÅËùÓĞÍ¨µÀĞÅÏ¢
+    //ÃŠÃÂ·Ã…Ã‹Ã¹Ã“ÃÃÂ¨ÂµÃ€ÃÃ…ÃÂ¢
     map<string, TunnelReq*>::iterator it3;
     for ( it3 = (*tunneladdr).begin(); it3 != (*tunneladdr).end(); )
     {
@@ -134,7 +134,7 @@ int SetLocalAddrInfo(char *url,char *ReqId,int regstate,list<TunnelInfo*>*tunnel
     sscanf(url,"%[^:]://%[^:]:%[0-9]",protocol,host,portstr);
     port=atoi(portstr);
     sscanf(host,"%[^.].",subdomain);
-      //½øĞĞµü´ú±éÀú
+      //Â½Ã¸ÃÃÂµÃ¼Â´ÃºÂ±Ã©Ã€Ãº
     for(iter = (*tunnellist).begin(); iter !=(*tunnellist).end(); iter++)
     {
         TunnelInfo	*tunnelinfo =(TunnelInfo*)*iter;
@@ -192,7 +192,7 @@ int RemoteSslInit(map<int, sockinfo*>::iterator *it1,sockinfo *tempinfo,string &
     else
     {
         setnonblocking((*it1)->first,1);
-        /* ssl ³õÊ¼»¯Ê§°Ü£¬ÒÆ³ıÁ¬½Ó */
+        /* ssl Â³ÃµÃŠÂ¼Â»Â¯ÃŠÂ§Â°ÃœÂ£Â¬Ã’Ã†Â³Ã½ÃÂ¬Â½Ã“ */
         clearsock( (*it1)->first, tempinfo );
         (*socklist).erase((*it1)++);
         return -1;
@@ -205,7 +205,7 @@ int RemoteSslInit(map<int, sockinfo*>::iterator *it1,sockinfo *tempinfo,string &
     }
     else
     {
-        /* ssl ³õÊ¼»¯Ê§°Ü£¬ÒÆ³ıÁ¬½Ó */
+        /* ssl Â³ÃµÃŠÂ¼Â»Â¯ÃŠÂ§Â°ÃœÂ£Â¬Ã’Ã†Â³Ã½ÃÂ¬Â½Ã“ */
         clearsock( (*it1)->first, tempinfo );
         (*socklist).erase((*it1)++);
         return -1;
@@ -217,7 +217,7 @@ int RemoteSslInit(map<int, sockinfo*>::iterator *it1,sockinfo *tempinfo,string &
 int LocalToRemote(map<int, sockinfo*>::iterator *it1,sockinfo *tempinfo,ssl_info *sslinfo,map<int,sockinfo*>*socklist){
     int readlen;
     int bufsize=1024*15;//15K  //oolarssl SSL_MAX_CONTENT_LEN 16384
-    //oolarssl ×î´ó·¢ËÍ³¤¶È²»ÄÜ³¬¹ı16K¡£¡£»¹ÊÇ¸Ä³É15°É
+    //oolarssl Ã—Ã®Â´Ã³Â·Â¢Ã‹ÃÂ³Â¤Â¶ÃˆÂ²Â»Ã„ÃœÂ³Â¬Â¹Ã½16KÂ¡Â£Â¡Â£Â»Â¹ÃŠÃ‡Â¸Ã„Â³Ã‰15Â°Ã‰
     char buf[bufsize+1];
     memset(buf,0,bufsize+1);
     #if WIN32
@@ -227,7 +227,7 @@ int LocalToRemote(map<int, sockinfo*>::iterator *it1,sockinfo *tempinfo,ssl_info
     #endif
     if ( readlen > 0&&sslinfo!=NULL )
     {
-        //·¢ËÍµ½Ô¶³Ì
+        //Â·Â¢Ã‹ÃÂµÂ½Ã”Â¶Â³ÃŒ
         #if OPENSSL
         sendremote(tempinfo->tosock,sslinfo->ssl,buf,readlen,1);
         #else
@@ -245,7 +245,7 @@ int LocalToRemote(map<int, sockinfo*>::iterator *it1,sockinfo *tempinfo,ssl_info
 int RemoteToLocal(ssl_info *sslinfo1,sockinfo *tempinfo1,map<int, sockinfo*>::iterator *it1,map<int,sockinfo*>*socklist){
    int readlen,sendlen;
    int bufsize=1024*15;//15K  //oolarssl SSL_MAX_CONTENT_LEN 16384
-   //oolarssl ×î´ó·¢ËÍ³¤¶È²»ÄÜ³¬¹ı16K¡£¡£»¹ÊÇ¸Ä³É15°É
+   //oolarssl Ã—Ã®Â´Ã³Â·Â¢Ã‹ÃÂ³Â¤Â¶ÃˆÂ²Â»Ã„ÃœÂ³Â¬Â¹Ã½16KÂ¡Â£Â¡Â£Â»Â¹ÃŠÃ‡Â¸Ã„Â³Ã‰15Â°Ã‰
    char buf[bufsize+1];
    memset(buf,0,bufsize+1);
    #if OPENSSL
@@ -263,7 +263,7 @@ int RemoteToLocal(ssl_info *sslinfo1,sockinfo *tempinfo1,map<int, sockinfo*>::it
         shutdown( tosock, 2 );
         clearsock( (*it1)->first, tempinfo1 );
         (*socklist).erase((*it1)++);
-        //ÕâĞĞ¾ø¶Ô²»ÄÜÉ¾³ı£¬ÓÃ±ê¼ÇsslÒÑ¾­Ïú»Ù£¬É¾³ı»áµ¼ÖÂ±ÀÀ£¡£
+        //Ã•Ã¢ÃÃÂ¾Ã¸Â¶Ã”Â²Â»Ã„ÃœÃ‰Â¾Â³Ã½Â£Â¬Ã“ÃƒÂ±ÃªÂ¼Ã‡sslÃ’Ã‘Â¾Â­ÃÃºÂ»Ã™Â£Â¬Ã‰Â¾Â³Ã½Â»Ã¡ÂµÂ¼Ã–Ã‚Â±Ã€Ã€Â£Â¡Â£
         if((*socklist).count(tosock)==1)
         {
             (*socklist)[tosock]->sslinfo=NULL;
@@ -283,7 +283,7 @@ int RemoteToLocal(ssl_info *sslinfo1,sockinfo *tempinfo1,map<int, sockinfo*>::it
 }
 
 int ConnectLocal(ssl_info *sslinfo,map<int, sockinfo*>::iterator *it1,sockinfo *tempinfo1,map<int,sockinfo*>*socklist,map<string,TunnelReq*> *tunneladdr){
-    //±ÜÃâÖ¸ÕëÎª¿Õ±ÀÀ£
+    //Â±ÃœÃƒÃ¢Ã–Â¸Ã•Ã«ÃÂªÂ¿Ã•Â±Ã€Ã€Â£
     if(sslinfo==NULL){
          clearsock( (*it1)->first, tempinfo1 );
         (*socklist).erase((*it1)++);
@@ -314,9 +314,9 @@ int ConnectLocal(ssl_info *sslinfo,map<int, sockinfo*>::iterator *it1,sockinfo *
 
     if ( readlen ==-1)
     {
-        return 0;//ÕâÀï²»ÄÜÓÃ-1²»È»»áµ¼ÖÂ£¬mapµü´úÆ÷²»×ÔÔö
+        return 0;//Ã•Ã¢Ã€Ã¯Â²Â»Ã„ÃœÃ“Ãƒ-1Â²Â»ÃˆÂ»Â»Ã¡ÂµÂ¼Ã–Ã‚Â£Â¬mapÂµÃ¼Â´ÃºÃ†Ã·Â²Â»Ã—Ã”Ã”Ã¶
     }
-    //ÓĞÊ±ºòreadlen±ä³É-76µ¼ÖÂ±ÀÀ£
+    //Ã“ÃÃŠÂ±ÂºÃ²readlenÂ±Ã¤Â³Ã‰-76ÂµÂ¼Ã–Ã‚Â±Ã€Ã€Â£
     if ( readlen <1)
     {
         clearsock( (*it1)->first, tempinfo1 );
@@ -324,7 +324,7 @@ int ConnectLocal(ssl_info *sslinfo,map<int, sockinfo*>::iterator *it1,sockinfo *
         return -1;
     }
 
-    /* copyµ½ÁÙÊ±»º´æÇø */
+    /* copyÂµÂ½ÃÃ™ÃŠÂ±Â»ÂºÂ´Ã¦Ã‡Ã¸ */
     if ( tempinfo1->packbuflen == 0 )
     {
         tempinfo1->packbuf = (unsigned char *) malloc( MAXBUF );
@@ -359,7 +359,7 @@ int ConnectLocal(ssl_info *sslinfo,map<int, sockinfo*>::iterator *it1,sockinfo *
                 cJSON	*Payload	= cJSON_GetObjectItem( json, "Payload" );
                 char	*Url		= cJSON_GetObjectItem( Payload, "Url" )->valuestring;
                  /*
-                 * Çå³ı
+                 * Ã‡Ã¥Â³Ã½
                  */
                 int backinfo=GetLocalAddr(Url,&local_addr,tunneladdr);
                 cJSON_Delete( json );
@@ -379,7 +379,7 @@ int ConnectLocal(ssl_info *sslinfo,map<int, sockinfo*>::iterator *it1,sockinfo *
                     sinfo->linktime=get_curr_unixtime();
                     sinfo->tosock		= (*it1)->first;
                     (*socklist).insert( map<int, sockinfo*> :: value_type( tcp, sinfo ) );
-                    /* Ô¶³ÌµÄ´øÉÏ±¾µØÁ´½Ó */
+                    /* Ã”Â¶Â³ÃŒÂµÃ„Â´Ã¸Ã‰ÃÂ±Â¾ÂµÃ˜ÃÂ´Â½Ã“ */
                     tempinfo1->tosock = tcp;
                     tempinfo1->isconnectlocal= 1;
                 }
@@ -397,7 +397,7 @@ int ConnectLocal(ssl_info *sslinfo,map<int, sockinfo*>::iterator *it1,sockinfo *
 
 
 int CmdSock(int *mainsock,sockinfo *tempinfo,map<int,sockinfo*>*socklist,struct sockaddr_in server_addr,string *ClientId,char * authtoken,list<TunnelInfo*>*tunnellist,map<string,TunnelReq*> *tunneladdr){
-   //¼ì²âÊÇ·ñ¶Ï¿ª
+   //Â¼Ã¬Â²Ã¢ÃŠÃ‡Â·Ã±Â¶ÃÂ¿Âª
    if(check_sock(*mainsock)!= 0)
    {
         return -1;
@@ -430,7 +430,7 @@ int CmdSock(int *mainsock,sockinfo *tempinfo,map<int,sockinfo*>*socklist,struct 
 
 
 
-    /* copyµ½ÁÙÊ±»º´æÇø */
+    /* copyÂµÂ½ÃÃ™ÃŠÂ±Â»ÂºÂ´Ã¦Ã‡Ã¸ */
     if ( tempinfo->packbuflen == 0 )
     {
         tempinfo->packbuf = (unsigned char *) malloc( MAXBUF );
@@ -507,7 +507,9 @@ int CmdSock(int *mainsock,sockinfo *tempinfo,map<int,sockinfo*>*socklist,struct 
     return 0;
 }
 
-int ConnectMain(int *mainsock,struct sockaddr_in server_addr,ssl_info **mainsslinfo,string *ClientId,map<int,sockinfo*>*socklist,char *authtoken)
+int ConnectMain(int *mainsock,struct sockaddr_in server_addr,ssl_info **mainsslinfo, \
+    string *ClientId,map<int,sockinfo*>*socklist, char *authtoken, \
+    string *Account, string *DevID, string *DevType, string *ProxyType)
 {
 	*mainsock = socket( AF_INET, SOCK_STREAM, IPPROTO_IP );
     SetBufSize(*mainsock);
@@ -541,9 +543,9 @@ int ConnectMain(int *mainsock,struct sockaddr_in server_addr,ssl_info **mainssli
 	}
 
     #if OPENSSL
-	SendAuth(*mainsock,(*mainsslinfo)->ssl, *ClientId, authtoken);
+	SendAuth(*mainsock,(*mainsslinfo)->ssl, *ClientId, authtoken, *Account, *DevID, *DevType, *ProxyType);
     #else
-	SendAuth(*mainsock, &(*mainsslinfo)->ssl, *ClientId, authtoken );
+	SendAuth(*mainsock, &(*mainsslinfo)->ssl, *ClientId, authtoken, *Account, *DevID, *DevType, *ProxyType);
     #endif
 
     setnonblocking( *mainsock,1);
