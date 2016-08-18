@@ -25,21 +25,23 @@ char *rand_str(char *str,const int len)
 
 
 
-int SendReqTunnel(int sock,ssl_context *ssl,char *ReqId,const char *protocol,const char * HostName,const char * Subdomain,int RemotePort,char *authtoken)
+int SendReqTunnel(int sock,ssl_context *ssl,char *ReqId,const char *protocol,const char * HostName,const char * Subdomain,int RemotePort,char *authtoken, char *ProxyType)
 {
     char guid[20]={0};
     rand_str(guid,5);
     char str[1024];
     memset(str,0,1024);
     memcpy(ReqId,guid,strlen(guid));//copy
-    sprintf(str,"{\"Type\":\"ReqTunnel\",\"Payload\":{\"Protocol\":\"%s\",\"ReqId\":\"%s\",\"Hostname\": \"%s\",\"Subdomain\":\"%s\",\"HttpAuth\":\"\",\"RemotePort\":%d,\"authtoken\":\"%s\"}}",protocol,guid,HostName,Subdomain,RemotePort,authtoken);
+    sprintf(str,"{\"Type\":\"ReqTunnel\",\"Payload\":{\"Protocol\":\"%s\",\"ReqId\":\"%s\"," \
+    	"\"Hostname\": \"%s\",\"Subdomain\":\"%s\",\"HttpAuth\":\"\",\"RemotePort\":%d," \
+    	"\"authtoken\":\"%s\", \"ProxyType\":\"%s\"}}",protocol,guid,HostName,Subdomain,RemotePort,authtoken, ProxyType);
     return sendpack(sock,ssl,str,1);
 }
 
 
 
 int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,int * s_port,char * authtoken,string *ClientId, \
-	string *Account, string *DevID, string *DevType, string *ProxyType, string *Osversion, string *Master)
+	string *Account, string *DevID, string *DevType, string *Osversion)
 {
 	if ( argc > 1 )
 	{
@@ -115,17 +117,9 @@ int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,i
                         {
                             *DevType = string( temp );
 						}
-						if(getvalue(jsonstr,"ProxyType",temp) == 0)
-                        {
-                            *ProxyType = string( temp );
-						}
 						if(getvalue(jsonstr,"Osversion",temp) == 0)
                         {
                             *Osversion = string( temp );
-						}
-						if(getvalue(jsonstr,"Master",temp) == 0)
-                        {
-                            *Master = string( temp );
 						}
 
 						pos = pos + xpos + 1;
@@ -168,6 +162,7 @@ int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,i
                         }
                         getvalue(jsonstr,"Sdname",tunnelinfo->subdomain);
                         getvalue(jsonstr,"Hostname",tunnelinfo->hostname);
+                        getvalue(jsonstr,"ProxyType",tunnelinfo->ProxyType);
 						pos = pos + xpos + 1;
 					}
 
@@ -175,12 +170,12 @@ int loadargs( int argc, char **argv ,list<TunnelInfo*>*tunnellist,char *s_name,i
 				}
 			}
 		}
-		echo("Account:%s, DevID:%s, DevType:%s, ProxyType:%s, Osversion:%s, Master\n", Account->c_str(), \
-			DevID->c_str(), DevType->c_str(), ProxyType->c_str(), Osversion->c_str(), Account->c_str());
+		echo("Account:%s, DevID:%s, DevType:%s, Osversion:%s\n", Account->c_str(), \
+			DevID->c_str(), DevType->c_str(), Osversion->c_str());
 	}else  {
 		echo( "use " );
         echo("%s",argv[0]);
-		echo( " -Info[Account:a,DevID:b,DevType:c,ProxyType:d,Osversion:1.1,Master:1] -SER[Shost:ngrokd.ngrok.com,Sport:443,Atoken:xxxxxxx] -AddTun[Type:tcp,Lhost:127.0.0.1,Lport:80,Rport:50199]" );
+		echo( " -Info[Account:a,DevID:b,DevType:c,Osversion:1.1] -SER[Shost:ngrokd.ngrok.com,Sport:443,Atoken:xxxxxxx] -AddTun[Type:tcp,Lhost:127.0.0.1,Lport:80,Rport:50199,ProxyType:web]" );
 		echo( "\r\n" );
 		exit( 1 );
 	}

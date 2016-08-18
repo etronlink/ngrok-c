@@ -76,9 +76,7 @@ string ClientId = "";
 string Account = "";
 string DevID = "";
 string DevType = "";
-string ProxyType ="";
 string Osversion = "";
-string Master = "";
 //end add 
 int	pingtime	= 0;
 int	ping		= 25; //不能大于30
@@ -122,7 +120,7 @@ int CheckStatus()
         if(lasterrtime==0||(lasterrtime+60)<get_curr_unixtime()){
             //连接失败
             if(ConnectMain(&mainsock,server_addr,&mainsslinfo,&ClientId,&socklist,authtoken, &Account, \
-                &DevID, &DevType, &ProxyType, &Osversion, &Master)==-1)
+                &DevID, &DevType, &Osversion)==-1)
             {
                 mainsockstatus=0;
                 printf("link err\r\n");
@@ -156,7 +154,7 @@ int main( int argc, char **argv )
 {
     printf("ngrokc v%s \r\n",VER);
 	loadargs( argc, argv, &tunnellist, s_name, &s_port, authtoken,&ClientId, &Account, &DevID, \
-        &DevType, &ProxyType, &Osversion, &Master);
+        &DevType, &Osversion);
     #if WIN32
 	signal( SIGINT, cs );
     #else
@@ -275,9 +273,9 @@ void* proxy(  )
                         memset(ReqId,0,20);
                         memset(tunnelinfo->ReqId,0,20);
                         #if OPENSSL
-                        SendReqTunnel(mainsock,mainsslinfo->ssl,ReqId,tunnelinfo->protocol,tunnelinfo->hostname,tunnelinfo->subdomain, tunnelinfo->remoteport ,authtoken);
+                        SendReqTunnel(mainsock,mainsslinfo->ssl,ReqId,tunnelinfo->protocol,tunnelinfo->hostname,tunnelinfo->subdomain, tunnelinfo->remoteport ,authtoken, tunnelinfo->ProxyType);
                         #else
-                        SendReqTunnel(mainsock,&mainsslinfo->ssl,ReqId,tunnelinfo->protocol,tunnelinfo->hostname,tunnelinfo->subdomain, tunnelinfo->remoteport,authtoken );
+                        SendReqTunnel(mainsock,&mainsslinfo->ssl,ReqId,tunnelinfo->protocol,tunnelinfo->hostname,tunnelinfo->subdomain, tunnelinfo->remoteport,authtoken, tunnelinfo->ProxyType);
                         #endif
                         //copy
                         memcpy(tunnelinfo->ReqId,ReqId,strlen(ReqId));
